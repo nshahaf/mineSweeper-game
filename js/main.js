@@ -26,7 +26,7 @@ function onInit(diff = 1) {
     gLevel = gLevels[diff]
 
     gBoard = buildBoard() // build the dataModel
-    //placeMines()
+    placeMines()
     setMinesNegsCount()
     renderBoard(gBoard)
     console.log('gBoard:', gBoard)
@@ -53,9 +53,9 @@ function buildBoard() { // create size x size matrix with empty cells
             board[i][j] = cellData
         }
     }
-
-    board[0][0].isMine = true
-    board[2][2].isMine = true
+    //for debbuging
+    // board[0][0].isMine = true
+    // board[2][2].isMine = true
     return board
 }
 
