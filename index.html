@@ -11,8 +11,8 @@
 <body onload="onInit()" >
     <div class="game-container">
         <div class="top-container">
-            <div id="mines-counter" class="counter">000</div>
-            <button class="reset-btn">😀</button>
+            <div id="flag-counter" class="counter">000</div>
+            <button class="reset-btn" onclick="onInit()">😀</button>
             <div id="time-counter" class="counter">000</div>
         </div>
 
@@ -20,6 +20,11 @@
             <tbody class="board">
             </tbody>
         </table>
+        <footer>
+            <button onclick="onInit(0)">easy</button>
+            <button onclick="onInit(1)">medium</button>
+            <button onclick="onInit(2)">hard</button>
+        </footer>
 
     </div>
 
@@ -28,3 +33,4 @@
 </body>
 
 </html>
+

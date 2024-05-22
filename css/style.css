@@ -1,7 +1,6 @@
 * {
     box-sizing: border-box;
     border-collapse: collapse;
-    
 }
 
 .game-container {
@@ -10,7 +9,6 @@
     background-color: grey;
     text-align: center;
     border: 3px solid black;
-
     width: 200px;
 
 }
@@ -34,19 +32,16 @@
 
 .reset-btn {
     background-color: transparent;
-
 }
 
 table {
     table-layout: fixed;
     border: 3px solid black;
     width: 100%;
-
 }
 
 .cell {
     opacity: 1;
-    box-shadow: 3px;
     border: 3px solid black;
 }
 .cell:hover {
@@ -56,6 +51,13 @@ table {
 .hide-cell {
     opacity: 0;
     
+}
+
+footer {
+    padding: 3px;
+}
+footer button{
+    text-align: center;
 }
 
 

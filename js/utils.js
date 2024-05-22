@@ -1,21 +1,7 @@
 'use strict'
 
-function getRandomColor() {
-    const letters = '0123456789ABCDEF'
-    var color = '#'
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)]
-    }
-    return color
-}
 
-function getRandomInt(min, max) { // generate a random number between min (inclusive) and max (exclusive)
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
-}
-
-function countNeighbors(cellI, cellJ, mat) {
+function countNeighbors(cellI, cellJ, mat) {//count nighbors func to count mines around
     var neighborCount = 0
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= mat.length) continue // only in range
@@ -30,3 +16,56 @@ function countNeighbors(cellI, cellJ, mat) {
     }
     return neighborCount
 }
+
+function padNumber(num) {// pad the counter and the flag count to be 000 type
+    var digits = (""+num).split("")
+    for (var i = digits.length ; i < 3 ; i ++) {
+        digits.unshift('0')
+    }
+    var str = digits.join('')
+    return str
+}
+
+function showMines() { // change all the mines to status shown
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            var currCell = gBoard[i][j]
+            if (currCell.isMine) currCell.isShown = true
+        }
+    }
+}
+
+function getCellTxtValue(cell) {//element txt value
+
+    if (!cell.isShown && cell.isMarked) return FLAG // cell is flaged but not clicked (left click)
+
+    if (cell.isShown && cell.isMine) return MINE // cell is clicked and is a mine
+
+    if (cell.isShown && !cell.isMine) return cell.minesAroundCount // cell clicked and is not a mine
+
+}
+
+function getCellClass(cell, i, j) { //element classes
+    var className = `cell cell-${i}-${j} hide-cell`
+    if (!cell.isShown && cell.isMarked || cell.isShown) { // show flag or open cell
+        className = `cell cell-${i}-${j}`
+    }
+    return className
+}
+
+function shuffle(array) {
+    var currentIndex = array.length;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      var randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  }
+  
