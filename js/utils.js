@@ -1,6 +1,5 @@
 'use strict'
 
-
 function countNeighbors(cellI, cellJ, mat) {//count nighbors func to count mines around
     var neighborCount = 0
     for (var i = cellI - 1; i <= cellI + 1; i++) {
@@ -20,20 +19,20 @@ function countNeighbors(cellI, cellJ, mat) {//count nighbors func to count mines
 function padNumber(num) {// pad the counter and the flag count to be 000 type
 
     if (num >= 0) {
-        var digits = (""+num).split("")
-        for (var i = digits.length ; i < 3 ; i ++) {
+        var digits = ("" + num).split("")
+        for (var i = digits.length; i < 3; i++) {
             digits.unshift('0')
         }
         var str = digits.join('')
-       
+
     } else {
         num = Math.abs(num)
-        var digits = (""+num).split("")
-        console.log('digits:',digits)
-        for (var i = digits.length ; i < 3 ; i ++) {
+        var digits = ("" + num).split("")
+        console.log('digits:', digits)
+        for (var i = digits.length; i < 3; i++) {
             digits.unshift('0')
         }
-        digits.splice(0,1,'-')
+        digits.splice(0, 1, '-')
         var str = digits.join('')
     }
     return str
@@ -70,17 +69,17 @@ function getCellClass(cell, i, j) { //element classes
 
 function shuffle(array) {
     var currentIndex = array.length;
-  
+
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
-  
-      // Pick a remaining element...
-      var randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+
+        // Pick a remaining element...
+        var randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
     }
-  }
-  
+}
+

@@ -1,8 +1,6 @@
 'use strict'
 
 //TODOS:
-//further tasks:
- 
 
 //CONSTANTS:
 const gLevels = [{ size: 4, mines: 2 }, { size: 8, mines: 14 }, { size: 12, mines: 32 }]
@@ -105,12 +103,12 @@ function placeMines(idxI, idxJ) {//place mines in random locations in gBoard
     for (var i = 0; i < gLevel.mines; i++) {
         arr.push(MINE)
     }
-    for (var i = gLevel.mines; i < gLevel.size ** 2; i++) {
+    for (var i = gLevel.mines; i < (gLevel.size ** 2); i++) { //-1 is for first click support
         arr.push("")
     }
     // console.log('arr:',arr)
     shuffle(arr)
-    console.log('arr:', arr)
+    // console.log('arr:', arr)
 
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
@@ -139,8 +137,7 @@ function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left clic
     currCell.isShown = true // change show status for later rendering of the board
     gGame.shownCount++
 
-    //on first click
-    if (gGame.isFirstClick) {
+    if (gGame.isFirstClick) {//added first click support
         placeMines(i, j)
         setMinesNegsCount()
         if (currCell.minesAroundCount === 0) revealAround(i, j)
@@ -149,7 +146,7 @@ function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left clic
         return
     }
 
-    if (currCell.isMine) {
+    if (currCell.isMine) {// added life support
         gGame.lifeCounter--
         updateLifeCount()
         currCell.isShown = false
@@ -164,15 +161,14 @@ function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left clic
 
 function onCellMarked(elCell, i, j) {//Called when a cell is right- clicked See how you can hide the context menu on right click
     if (!gGame.isOn) return
-    console.log(elCell.style.fontSize)
-
+    
     var currCell = gBoard[i][j]
     if (currCell.isShown) return
     currCell.isMarked = !currCell.isMarked //toggle flag
 
     currCell.isMarked ? gGame.markedCount++ : gGame.markedCount--
-    console.log('gGame.markedCount:', gGame.markedCount)
-    console.log('currCell:', currCell)
+    // console.log('gGame.markedCount:', gGame.markedCount)
+    // console.log('currCell:', currCell)
     renderBoard(gBoard)
     checkGameOver()
 
@@ -200,15 +196,20 @@ function checkGameOver() {//Game ends when all mines are marked, and all the oth
     if (gGame.markedCount !== gLevel.mines) return
 
     if (gGame.shownCount < numOfCells - gLevel.mines) return
+
     gameOver(true)
 
 }
 
 function gameOver(isWin = false) {// stop player activities and show all mines on the board
     gGame.isOn = false
-    isWin? updateIcon(gIcons.winner) : updateIcon(gIcons.looser)
-    console.log('game is over')
     showMines()
+    isWin? updateIcon(gIcons.winner) : updateIcon(gIcons.looser)
+    isWin? console.log('Winner!') : console.log('game is over')
+    if(isWin) {
+        saveToLocalStorage()
+        updateHighScoreTable()
+    }
     renderBoard(gBoard)
 }
 

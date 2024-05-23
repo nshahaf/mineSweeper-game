@@ -3,15 +3,10 @@
     border-collapse: collapse;
 }
 
-body {
-    margin: 100px 100px;
-}
 .game-container {
     margin: auto;
-    margin-top: 200px;
-    /* background-color:rgb(190, 190, 190); */
+    padding-top: 150px;
     text-align: center;
-    /* border: 3px solid black; */
     width: 250px;
 
 }
@@ -21,48 +16,49 @@ body {
 }
 
 .top-container {
+    display: flex;
+    justify-content: space-between;
     background-color:rgb(190, 190, 190);
     border: 3px solid black;
     padding: 5px;
     border: 3px solid black;
 }
 
+
 .counter {
-    display: inline-block;
+    /* flex-grow: 1; */
     text-align: center;
     font-family: "Orbitron", sans-serif;
     font-weight: 500;
     font-style: normal;
     letter-spacing: 1px;
-    width: 50px;
+    width: 95px;
     /* margin: 0 auto; */
-    padding: 0 3px;
+    padding: 3px;
     background-color: black;
     color: red;
 }
 
-/* .counter#time-counter {
-} */
-
 .reset-btn {
     background-color: transparent;
+    padding: 0 2px;
+    font-size: 16px;
 }
 
 table {
     background-color:rgb(190, 190, 190);
-    table-layout: fixed;
-    border: 3px solid black;
     width: 100%;
+    table-layout: fixed;
 }
 
-   
 .cell {
     opacity: 1;
     border: 3px solid black;
+    border-top: 0px;
     font-weight:bold;
-    width: 16px;
-    height: 16px;
-
+    padding: 3px;
+    
+    
 }
 
 .cell:hover {
@@ -71,13 +67,17 @@ table {
 
 .hide-cell {
     opacity: 0;
+    box-shadow: 0 0 10px rgba(7, 7, 7, 0.336);
 }
 
 footer {
-    padding: 3px;
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
 }
 
 footer button {
+    flex-grow: 1;
     text-align: center;
     background-color:rgb(192, 199, 200);
 }
@@ -92,4 +92,20 @@ footer button {
 
 .color3 {
     color: rgb(255, 0, 0)
+}
+
+
+.high-score-heading {
+    text-align: center;
+    margin: 20pxpx auto;
+    margin-bottom: 0px;
+
+}
+.high-score{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.high-score .flex-item {
+    text-align: left;
 }
