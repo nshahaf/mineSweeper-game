@@ -1,9 +1,15 @@
 'use strict'
 
+//TODOS:
+//further tasks:
+ 
+
 //CONSTANTS:
 const gLevels = [{ size: 4, mines: 2 }, { size: 8, mines: 14 }, { size: 12, mines: 32 }]
+const gIcons = {normal: '😀', winner:'😎', looser: '😭'}
 const MINE = '💣'
 const FLAG = '🚩'
+const LIFE = '💗'
 
 
 //GLOBAL VERIABLES:
@@ -11,25 +17,28 @@ var gBoard
 var gGame
 var gLevel
 var gtimerintervalId
+var gameDiff = 1
 
 //disable right mouse click default modal
 document.addEventListener('contextmenu', event => { event.preventDefault(); })
 
-//Init and rendering functions
-function onInit(diff = 1) {
+//Init veriables and functions
+function onInit() {
     gGame = {
         isOn: true,
+        isFirstClick: true,
         shownCount: 0,
         markedCount: 0, // with flag
-        secsPassed: 0
+        secsPassed: 0,
+        lifeCounter: 3,
     }
-    gLevel = gLevels[diff]
 
+    updateLifeCount()
+    updateIcon()
+    gLevel = gLevels[gameDiff]
     gBoard = buildBoard() // build the dataModel
-    placeMines()
-    setMinesNegsCount()
+
     renderBoard(gBoard)
-    console.log('gBoard:', gBoard)
 
     clearInterval(gtimerintervalId)
     gtimerintervalId = setInterval(updateTimeCounter, 1000)
@@ -68,7 +77,6 @@ function renderBoard(board) {//Render the board as a <table> to the page
         for (var j = 0; j < board[0].length; j++) {
             var cell = board[i][j]
 
-            // var className = cell.isShown ? `cell cell-${i}-${j}` : `cell cell-${i}-${j} hide-cell`
             var className = getCellClass(cell, i, j)
             var txt = getCellTxtValue(cell)
 
@@ -91,7 +99,7 @@ function renderBoard(board) {//Render the board as a <table> to the page
     // console.log('gGame.shownCount:',gGame.shownCount)
 }
 
-function placeMines() {//place mines in random locations in gBoard
+function placeMines(idxI, idxJ) {//place mines in random locations in gBoard
     //create shuffled array in the board size with mines in random locations
     var arr = []
     for (var i = 0; i < gLevel.mines; i++) {
@@ -106,6 +114,7 @@ function placeMines() {//place mines in random locations in gBoard
 
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
+            if (i === idxI && j === idxJ) continue
             if (arr.shift() === MINE) gBoard[i][j].isMine = true
         }
     }
@@ -127,23 +136,35 @@ function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left clic
     var currCell = gBoard[i][j] // model
     if (currCell.isMarked || currCell.isShown) return // user cant clicked on a flaged cell
 
-    //for debugging
-    // console.log('currCell:', currCell)
-    // console.log('i:', i)
-    // console.log('j:', j)
-
     currCell.isShown = true // change show status for later rendering of the board
     gGame.shownCount++
-    if (currCell.isMine) gameOver()
+
+    //on first click
+    if (gGame.isFirstClick) {
+        placeMines(i, j)
+        setMinesNegsCount()
+        if (currCell.minesAroundCount === 0) revealAround(i, j)
+        renderBoard(gBoard)
+        gGame.isFirstClick = false
+        return
+    }
+
+    if (currCell.isMine) {
+        gGame.lifeCounter--
+        updateLifeCount()
+        currCell.isShown = false
+        gGame.shownCount--
+        if (gGame.lifeCounter === 0) gameOver()
+    }
     if (currCell.minesAroundCount === 0 && !currCell.isMine) revealAround(i, j)
 
     renderBoard(gBoard)
     checkGameOver()
-
 }
 
 function onCellMarked(elCell, i, j) {//Called when a cell is right- clicked See how you can hide the context menu on right click
     if (!gGame.isOn) return
+    console.log(elCell.style.fontSize)
 
     var currCell = gBoard[i][j]
     if (currCell.isShown) return
@@ -166,6 +187,7 @@ function revealAround(i, j) {// if cells has no mines around, reveal the mines a
 
             if (!gBoard[i + dx][j + dy].isShown) {
                 gBoard[i + dx][j + dy].isShown = true
+                if (gBoard[i + dx][j + dy].isMarked) gGame.markedCount--
                 gGame.shownCount++
             }
         }
@@ -173,18 +195,21 @@ function revealAround(i, j) {// if cells has no mines around, reveal the mines a
 }
 
 function checkGameOver() {//Game ends when all mines are marked, and all the other cells are shown
-    var total = gGame.shownCount + gGame.markedCount
-    // console.log('total:', total)
-    // console.log('gLevel.size**2:', gLevel.size ** 2)
-    if (total === gLevel.size ** 2) gameOver()
+    var numOfCells = gLevel.size ** 2
+
+    if (gGame.markedCount !== gLevel.mines) return
+
+    if (gGame.shownCount < numOfCells - gLevel.mines) return
+    gameOver(true)
+
 }
 
-function gameOver() {// stop player activities and show all mines on the board
+function gameOver(isWin = false) {// stop player activities and show all mines on the board
     gGame.isOn = false
+    isWin? updateIcon(gIcons.winner) : updateIcon(gIcons.looser)
     console.log('game is over')
     showMines()
     renderBoard(gBoard)
-
 }
 
 function updateTimeCounter() {
@@ -195,26 +220,27 @@ function updateTimeCounter() {
     gGame.secsPassed++
 }
 
-// function onDiffButtonClicked(val) {//handle board width 
-//     gameOver()
-//     var elGameContainer = document.querySelector(".game-container")
-//     elGameContainer.style.width = "200px"
-//     console.dir('elGameContainer.style.width',elGameContainer.style.width)
-//     switch (val) {
-//         case 0:
-           
-//             break;
+function onDiffButtonClicked(val) {//handle board width 
+    var elGameContainer = document.querySelector(".game-container")
+    gameDiff = val
+    if (val === 0) elGameContainer.style.width = '200px'
+    else if (val === 1) elGameContainer.style.width = '250px'
+    else if (val === 2) elGameContainer.style.width = '400px'
+    else elGameContainer.style.width = '250px'
+    gameOver()
+    onInit(val)
+}
 
-//         default:
-//         case 1:
+function updateLifeCount () {// DOM update for the visual life counter 
+    var elLife = document.querySelector('#life')
+    var htmlTxt =''
+    for( var i = 0; i < gGame.lifeCounter; i++) {
+        htmlTxt += LIFE
+    }
+    elLife.innerText = htmlTxt
+}
 
-//             break;
-
-//         case 2:
-
-//             break;
-//     }
-//     onInit(val)
-
-
-// }
+function updateIcon(str = gIcons.normal){ // DOM update for the player icon
+    var elIcon = document.querySelector('.reset-btn')
+    elIcon.innerText = str
+}

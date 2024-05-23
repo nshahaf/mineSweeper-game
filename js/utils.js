@@ -18,11 +18,24 @@ function countNeighbors(cellI, cellJ, mat) {//count nighbors func to count mines
 }
 
 function padNumber(num) {// pad the counter and the flag count to be 000 type
-    var digits = (""+num).split("")
-    for (var i = digits.length ; i < 3 ; i ++) {
-        digits.unshift('0')
+
+    if (num >= 0) {
+        var digits = (""+num).split("")
+        for (var i = digits.length ; i < 3 ; i ++) {
+            digits.unshift('0')
+        }
+        var str = digits.join('')
+       
+    } else {
+        num = Math.abs(num)
+        var digits = (""+num).split("")
+        console.log('digits:',digits)
+        for (var i = digits.length ; i < 3 ; i ++) {
+            digits.unshift('0')
+        }
+        digits.splice(0,1,'-')
+        var str = digits.join('')
     }
-    var str = digits.join('')
     return str
 }
 
@@ -41,14 +54,16 @@ function getCellTxtValue(cell) {//element txt value
 
     if (cell.isShown && cell.isMine) return MINE // cell is clicked and is a mine
 
-    if (cell.isShown && !cell.isMine) return cell.minesAroundCount // cell clicked and is not a mine
+    if (cell.isShown && !cell.isMine) return `${cell.minesAroundCount}` // cell clicked and is not a mine
+    else return '?'
 
 }
 
 function getCellClass(cell, i, j) { //element classes
+    var n = cell.minesAroundCount
     var className = `cell cell-${i}-${j} hide-cell`
     if (!cell.isShown && cell.isMarked || cell.isShown) { // show flag or open cell
-        className = `cell cell-${i}-${j}`
+        className = `cell cell-${i}-${j} color${n}`
     }
     return className
 }

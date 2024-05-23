@@ -3,28 +3,42 @@
     border-collapse: collapse;
 }
 
+body {
+    margin: 100px 100px;
+}
 .game-container {
     margin: auto;
     margin-top: 200px;
-    background-color: grey;
+    /* background-color:rgb(190, 190, 190); */
     text-align: center;
-    border: 3px solid black;
-    width: 200px;
+    /* border: 3px solid black; */
+    width: 250px;
 
 }
+
 .disabled {
     pointer-events: none;
 }
 
 .top-container {
+    background-color:rgb(190, 190, 190);
     border: 3px solid black;
     padding: 5px;
     border: 3px solid black;
 }
+
 .counter {
     display: inline-block;
-    background-color: transparent;
-    color: whitesmoke;
+    text-align: center;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 1px;
+    width: 50px;
+    /* margin: 0 auto; */
+    padding: 0 3px;
+    background-color: black;
+    color: red;
 }
 
 /* .counter#time-counter {
@@ -35,29 +49,47 @@
 }
 
 table {
+    background-color:rgb(190, 190, 190);
     table-layout: fixed;
     border: 3px solid black;
     width: 100%;
 }
 
+   
 .cell {
     opacity: 1;
     border: 3px solid black;
+    font-weight:bold;
+    width: 16px;
+    height: 16px;
+
 }
+
 .cell:hover {
-    cursor: pointer;
+    cursor: context-menu;
 }
 
 .hide-cell {
     opacity: 0;
-    
 }
 
 footer {
     padding: 3px;
 }
-footer button{
+
+footer button {
     text-align: center;
+    background-color:rgb(192, 199, 200);
 }
 
+.color1 {
+    color: rgb(0, 0, 255);
+}
 
+.color2 {
+    color: rgb(0, 168, 87)
+}
+
+.color3 {
+    color: rgb(255, 0, 0)
+}
