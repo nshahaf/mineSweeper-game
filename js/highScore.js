@@ -11,8 +11,6 @@ function retriveFromLocalStorage() {
         highScoreTable = []
         return
     }
-
-    // highScoreTable = highScoreTable.sort((score1, score2) => { return score1.time - score2.time })
 }
 
 function updateHighScoreTable() {

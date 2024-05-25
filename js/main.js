@@ -1,10 +1,8 @@
 'use strict'
 
-//TODOS:
-
 //CONSTANTS:
 const gLevels = [{ size: 4, mines: 2 }, { size: 8, mines: 14 }, { size: 12, mines: 32 }]
-const gIcons = {normal: '😀', winner:'😎', looser: '😭'}
+const gIcons = { normal: '😀', winner: '😎', looser: '😭' }
 const MINE = '💣'
 const FLAG = '🚩'
 const LIFE = '💗'
@@ -30,7 +28,8 @@ function onInit() {
         secsPassed: 0,
         lifeCounter: 3,
     }
-
+    initHints()
+    
     updateLifeCount()
     updateIcon()
     gLevel = gLevels[gameDiff]
@@ -130,21 +129,29 @@ function setMinesNegsCount() {//Count mines around each cell and set the cell's 
 //InGame functions
 function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left click)
     if (!gGame.isOn) return
-
     var currCell = gBoard[i][j] // model
     if (currCell.isMarked || currCell.isShown) return // user cant clicked on a flaged cell
-
-    currCell.isShown = true // change show status for later rendering of the board
-    gGame.shownCount++
 
     if (gGame.isFirstClick) {//added first click support
         placeMines(i, j)
         setMinesNegsCount()
+        currCell.isShown = true 
+        gGame.shownCount++
         if (currCell.minesAroundCount === 0) revealAround(i, j)
         renderBoard(gBoard)
         gGame.isFirstClick = false
         return
     }
+
+    if (gIsHint) {
+        hintShowAround(i, j)
+        return
+    }
+
+    currCell.isShown = true // change show status for later rendering of the board
+    gGame.shownCount++
+
+
 
     if (currCell.isMine) {// added life support
         gGame.lifeCounter--
@@ -161,7 +168,7 @@ function onCellClicked(elCell, i, j) {//Called when a cell is clicked (left clic
 
 function onCellMarked(elCell, i, j) {//Called when a cell is right- clicked See how you can hide the context menu on right click
     if (!gGame.isOn) return
-    
+
     var currCell = gBoard[i][j]
     if (currCell.isShown) return
     currCell.isMarked = !currCell.isMarked //toggle flag
@@ -204,9 +211,9 @@ function checkGameOver() {//Game ends when all mines are marked, and all the oth
 function gameOver(isWin = false) {// stop player activities and show all mines on the board
     gGame.isOn = false
     showMines()
-    isWin? updateIcon(gIcons.winner) : updateIcon(gIcons.looser)
-    isWin? console.log('Winner!') : console.log('game is over')
-    if(isWin) {
+    isWin ? updateIcon(gIcons.winner) : updateIcon(gIcons.looser)
+    isWin ? console.log('Winner!') : console.log('game is over')
+    if (isWin) {
         saveToLocalStorage()
         updateHighScoreTable()
     }
@@ -229,19 +236,19 @@ function onDiffButtonClicked(val) {//handle board width
     else if (val === 2) elGameContainer.style.width = '400px'
     else elGameContainer.style.width = '250px'
     gameOver()
-    onInit(val)
+    onInit()
 }
 
-function updateLifeCount () {// DOM update for the visual life counter 
+function updateLifeCount() {// DOM update for the visual life counter 
     var elLife = document.querySelector('#life')
-    var htmlTxt =''
-    for( var i = 0; i < gGame.lifeCounter; i++) {
+    var htmlTxt = ''
+    for (var i = 0; i < gGame.lifeCounter; i++) {
         htmlTxt += LIFE
     }
     elLife.innerText = htmlTxt
 }
 
-function updateIcon(str = gIcons.normal){ // DOM update for the player icon
+function updateIcon(str = gIcons.normal) { // DOM update for the player icon
     var elIcon = document.querySelector('.reset-btn')
     elIcon.innerText = str
 }

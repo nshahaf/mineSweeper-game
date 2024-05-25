@@ -6,14 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MineSweeper</title>
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- google font -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">  <!-- google font -->
 </head>
 
 <body onload="onInit()">
     <div class="game-container">
-        <div id="life">💗💗💗</div>
+        <section class="life-section">
+            <div id="life">💗💗💗</div>
+            <div id="hint">
+                <button onclick="onHintClick(0)">💡</button>
+                <button onclick="onHintClick(1)">💡</button>
+                <button onclick="onHintClick(2)">💡</button>
+            </div>
+        </section>
         <div class="top-container">
             <div id="flag-counter" class="counter">000</div>
             <button class="reset-btn" onclick="onInit()">😀</button>
@@ -61,6 +66,7 @@
     <script src="js/main.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/highScore.js"></script>
+    <script src="js/hints.js"></script>
 
 </body>
 
